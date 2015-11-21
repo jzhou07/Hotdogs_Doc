@@ -45,14 +45,45 @@ This small shiny application demonstrates the usage of two different operations:
 * Reactive: Current selection on the right changes when selection changes on the left; 
 * Non-Reactive: Current plot and the plot change only when clicked the Display button.
 
-<iframe src='ui_Code.png' width = 800px height = 250px> 
-</iframe>
+```r
+shinyUI(pageWithSidebar(
+  headerPanel("Hotdog Report!"),
+  sidebarPanel(
+    radioButtons("category", "Report Category: ", c("Calories" = "Calories","Sodium" = "Sodium")),
+    actionButton("goButton", "Display"),
+    p('Note: The data set used here is hot_dogs.csv, Original source: Consumer Reports, June 1986, pp.366 - 367')
+  ),
+  mainPanel(p('Current Selection: '),
+            verbatimTextOutput('text1'),
+            p('Current Plot is for: '),
+            verbatimTextOutput('text2'),
+            plotOutput("distPlot")
+  )))
+```
+
 
 --- .class #id 
 
 ## server.R
 On server side, based on the selection, plot differently after clicking the Display button. 
 
-<iframe src='server_Code.png' width = 800px height = 250px> 
-</iframe>
+
+```r
+hotdogs <- read.csv("hot_dogs.csv")
+shinyServer(function(input, output) {
+    output$text1 = renderText({input$category})
+    output$text2 <- renderText({
+      input$goButton
+      isolate(input$category)
+    })
+    output$distPlot <- renderPlot({
+      input$goButton
+      isolate(
+      if (input$category == "Calories") {with(hotdogs, boxplot(Calories ~ Type, main = "Calories"))}
+      else
+      {with(hotdogs, boxplot(Sodium ~ Type, main = "Sodium"))}
+      )
+    })
+})
+```
 

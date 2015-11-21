@@ -90,8 +90,20 @@ head(hotdogs)
 <li>Non-Reactive: Current plot and the plot change only when clicked the Display button.</li>
 </ul>
 
-<iframe src='ui_Code.png' width = 800px height = 250px> 
-</iframe>
+<pre><code class="r">shinyUI(pageWithSidebar(
+  headerPanel(&quot;Hotdog Report!&quot;),
+  sidebarPanel(
+    radioButtons(&quot;category&quot;, &quot;Report Category: &quot;, c(&quot;Calories&quot; = &quot;Calories&quot;,&quot;Sodium&quot; = &quot;Sodium&quot;)),
+    actionButton(&quot;goButton&quot;, &quot;Display&quot;),
+    p(&#39;Note: The data set used here is hot_dogs.csv, Original source: Consumer Reports, June 1986, pp.366 - 367&#39;)
+  ),
+  mainPanel(p(&#39;Current Selection: &#39;),
+            verbatimTextOutput(&#39;text1&#39;),
+            p(&#39;Current Plot is for: &#39;),
+            verbatimTextOutput(&#39;text2&#39;),
+            plotOutput(&quot;distPlot&quot;)
+  )))
+</code></pre>
 
   </article>
   <!-- Presenter Notes -->
@@ -104,8 +116,23 @@ head(hotdogs)
   <article data-timings="">
     <p>On server side, based on the selection, plot differently after clicking the Display button. </p>
 
-<iframe src='server_Code.png' width = 800px height = 250px> 
-</iframe>
+<pre><code class="r">hotdogs &lt;- read.csv(&quot;hot_dogs.csv&quot;)
+shinyServer(function(input, output) {
+    output$text1 = renderText({input$category})
+    output$text2 &lt;- renderText({
+      input$goButton
+      isolate(input$category)
+    })
+    output$distPlot &lt;- renderPlot({
+      input$goButton
+      isolate(
+      if (input$category == &quot;Calories&quot;) {with(hotdogs, boxplot(Calories ~ Type, main = &quot;Calories&quot;))}
+      else
+      {with(hotdogs, boxplot(Sodium ~ Type, main = &quot;Sodium&quot;))}
+      )
+    })
+})
+</code></pre>
 
   </article>
   <!-- Presenter Notes -->
