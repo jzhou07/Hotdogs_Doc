@@ -1,0 +1,58 @@
+---
+title       : Hotdogs Report
+subtitle    : Calorie and Sodium Study on Hogdogs
+author      : Jason Zhou
+job         : Coursera Learner
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Data Source  
+
+The data set used here is hot_dogs.csv, Original source: Consumer Reports, June 1986, pp.366 - 367. 
+It looks like this: 
+
+```r
+hotdogs <- read.csv("hot_dogs.csv")
+head(hotdogs)
+```
+
+```
+##   Type Calories Sodium
+## 1 Beef      186    495
+## 2 Beef      181    477
+## 3 Beef      176    425
+## 4 Beef      149    322
+## 5 Beef      184    482
+## 6 Beef      190    587
+```
+
+--- .class #id 
+
+## User Interface
+   
+<iframe src='Hotdogs_Pic_6.png' width = 800px height = 250px> 
+</iframe>
+
+--- .class #id  
+
+## ui.R
+This small shiny application demonstrates the usage of two different operations: 
+* Reactive: Current selection on the right changes when selection changes on the left; 
+* Non-Reactive: Current plot and the plot change only when clicked the Display button.
+
+<iframe src='ui_Code.png' width = 800px height = 250px> 
+</iframe>
+
+--- .class #id 
+
+## server.R
+On server side, based on the selection, plot differently after clicking the Display button. 
+
+<iframe src='server_Code.png' width = 800px height = 250px> 
+</iframe>
+
